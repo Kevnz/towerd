@@ -1,6 +1,8 @@
 module.exports = {
     init: function () {
         //Add here your scaling options
+        game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
+        game.stage.backgroundColor = '#cccccc';
     },
 
     preload: function () {
