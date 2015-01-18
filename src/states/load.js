@@ -21,9 +21,11 @@ module.exports = {
         game.load.spritesheet('tiles', 'assets/faux_tiles.png', 16,16);
         game.load.text('level-1', 'assets/levels/1.txt');
         game.load.atlasJSONHash('tiles', 'assets/tiles.png', 'assets/tiles.json');
-        game.load.image('footman', 'assets/footman.png');
+        game.load.image('footman', 'assets/td-footman.png');
         game.load.image('turret_base', 'assets/turret_base.png');
         game.load.image('turret_top', 'assets/turret_top.png');
+
+        game.load.image('shot', 'assets/shot.png');
     },
 
     create: function () {

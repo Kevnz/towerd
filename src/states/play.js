@@ -8,7 +8,8 @@ var path;
 
 var t1,t2, enemy;
 
-
+var bullets;
+var Turret = require('../entities/turret'); 
 var addTile = function (x,y) { 
     var b = blocks.create(x*game.globals.TILE_SIZE, game.globals.TILE_SIZE *(y), 'tiles', 'greenbrick.png');
     b.body.immovable = true; 
@@ -70,13 +71,16 @@ var buildEnemyMove = function (actor) {
 var releaseTheHounds = function () {
     enemy = enemies.getFirstExists(false);
     enemy.reset(startingPoint.x * game.globals.TILE_SIZE, startingPoint.y * game.globals.TILE_SIZE);
-
+    enemy.hp=8;
     buildEnemyMove(enemy);
 }
 var preparePath = function () {
     pathfinder.setCallbackFunction(function(fpath) {
         path = fpath || []; 
         releaseTheHounds();
+        setTimeout(releaseTheHounds, 1000*2);
+        setTimeout(releaseTheHounds,2000*2);
+        setTimeout(releaseTheHounds, 3000*2);
  
     });
     //console.log([startx, starty], [tilex, tiley])
@@ -88,33 +92,9 @@ var preparePath = function () {
         //console.log(e);
     }
 }
+ 
 
-var addTurret = function (x, y) {
-    var base = game.add.sprite(x* game.globals.TILE_SIZE, y* game.globals.TILE_SIZE,  'turret_base');
-    var gun = game.add.sprite(x* game.globals.TILE_SIZE, y* game.globals.TILE_SIZE, 'turret_top');
 
-    //base.anchor.set(0.5);
-    //gun.anchor.set(0.5, 0.5);
-
-    //gun.rotation = game.physics.arcade.angleBetween(gun, target);
-}
-
-var Turret = function (x,y) {
-    this.base = game.add.sprite(x* game.globals.TILE_SIZE, y* game.globals.TILE_SIZE,  'turret_base');
-    this.gun = game.add.sprite((x+.5)* game.globals.TILE_SIZE, (y+.5)* game.globals.TILE_SIZE, 'turret_top');
-    this.gun.anchor.set(0.5,0.5);
-}
-
-Turret.prototype.update = function() {
-    // body...
-    if(!this.target) return;
-    this.gun.rotation = game.physics.arcade.angleBetween(this.gun, this.target);
-    console.log(game.physics.arcade.angleBetween(this.gun, this.target) )
-};
-
-Turret.prototype.track = function(target) {
-    this.target = target;
-};
 module.exports = {
     create: function(){
         console.log('play')
@@ -131,7 +111,14 @@ module.exports = {
         pathfinder = game.plugins.add(Phaser.Plugin.PathFinderPlugin);
         pathfinder.setGrid(map, walkables);
 
-
+        bullets = game.add.group();
+        bullets.enableBody = true;
+        bullets.physicsBodyType = Phaser.Physics.ARCADE;
+        bullets.createMultiple(6, 'shot');
+        bullets.setAll('anchor.x', 0.5);
+        bullets.setAll('anchor.y', 1);
+        bullets.setAll('outOfBoundsKill', true);
+        bullets.setAll('checkWorldBounds', true);
 
         enemies = game.add.group();
         enemies.enableBody = true;
@@ -143,8 +130,8 @@ module.exports = {
         preparePath();
         console.log('end');
 
-        t1 = new Turret(4,4);
-        t2 = new Turret(1,5);
+        t1 = new Turret(4,4, bullets);
+        t2 = new Turret(1,5, bullets);
         t1.track(enemy);
         t2.track(enemy);
     },
@@ -153,5 +140,11 @@ module.exports = {
 
             t1.update();
             t2.update();
+
+            game.physics.arcade.overlap(bullets, enemies, function (b,e) {
+                b.kill();
+                e.hp = e.hp-1;
+                if (e.hp<=0) {e.kill();}
+            }, null, this);
     },
 };
