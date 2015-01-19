@@ -34,8 +34,8 @@ gulp.task('assets',  function () {
     .pipe(gulp.dest('dist/assets/'));
 });
 gulp.task('levels',  function () {
-	return gulp.src('levels/*')
-    .pipe(gulp.dest('dist/levels/'));
+	return gulp.src('assets/levels/*')
+    .pipe(gulp.dest('dist/assets/levels/'));
 });
 gulp.task('plugins',  function () {
 	return gulp.src('plugins/*')
