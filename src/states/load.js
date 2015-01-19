@@ -24,6 +24,7 @@ module.exports = {
         game.load.image('footman', 'assets/td-footman.png');
         game.load.image('turret_base', 'assets/turret_base.png');
         game.load.image('turret_top', 'assets/turret_top.png');
+        game.load.image('clear', 'assets/tracker.png');
 
         game.load.image('shot', 'assets/shot.png');
     },
