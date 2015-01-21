@@ -20,7 +20,11 @@ Turret.prototype.update = function() {
 
     this.gun.rotation = game.physics.arcade.angleBetween(this.gun, this.target); 
 
-    this.fire();
+    
+
+    if (game.physics.arcade.distanceBetween(this.base, this.target) < 48) {
+        this.fire();
+    }
 };
 
 Turret.prototype.track = function(target) {
@@ -29,7 +33,7 @@ Turret.prototype.track = function(target) {
 
 Turret.prototype.fire = function() {
 
-    if (game.time.now > this.bulletTime) { 
+    if (game.time.now > this.bulletTime && this.target.alive) { 
         //  Grab the first bullet we can from the pool
         var bullet = this.bullets.getFirstExists(false); 
         if (bullet) {
@@ -44,4 +48,6 @@ Turret.prototype.fire = function() {
 
     console.log(this.target.alive);
 };
+
+ 
 module.exports = Turret;

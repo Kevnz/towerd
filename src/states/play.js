@@ -77,10 +77,8 @@ var releaseTheHounds = function () {
 var preparePath = function () {
     pathfinder.setCallbackFunction(function(fpath) {
         path = fpath || []; 
-        releaseTheHounds();
-        setTimeout(releaseTheHounds, 1000*2);
-        setTimeout(releaseTheHounds,2000*2);
-        setTimeout(releaseTheHounds, 3000*2);
+        //releaseTheHounds();
+        game.time.events.repeat(Phaser.Timer.SECOND * 7, 4, releaseTheHounds, this);
  
     });
     //console.log([startx, starty], [tilex, tiley])
@@ -131,20 +129,29 @@ module.exports = {
         console.log('end');
 
         t1 = new Turret(4,4, bullets);
-        t2 = new Turret(1,5, bullets);
-        t1.track(enemy);
-        t2.track(enemy);
+        t2 = new Turret(1,5, bullets); 
     },
     update: function(){
     //Game logic goes here
 
-            t1.update();
-            t2.update();
+
 
             game.physics.arcade.overlap(bullets, enemies, function (b,e) {
                 b.kill();
                 e.hp = e.hp-1;
                 if (e.hp<=0) {e.kill();}
             }, null, this);
+            enemies.forEach(function (enemy) {
+                //console.log(game.physics.arcade.distanceBetween(t1.base, enemy));
+                if (game.physics.arcade.distanceBetween(t1.base, enemy) < 48) {
+                    t1.track(enemy)
+                }
+                if (game.physics.arcade.distanceBetween(t2.base, enemy) < 48) {
+                    t2.track(enemy)
+                }
+            });
+            t1.update();
+            t2.update();
+ 
     },
 };
