@@ -25,7 +25,7 @@ var Turret = function (x,y, bullets) {
     this.base = game.add.sprite(x* game.globals.TILE_SIZE, y* game.globals.TILE_SIZE,  'turret_base');
     this.gun = game.add.sprite((x+.5)* game.globals.TILE_SIZE, (y+.5)* game.globals.TILE_SIZE, 'turret_top');
     this.radar =game.add.sprite(x* game.globals.TILE_SIZE, y* game.globals.TILE_SIZE,  'clear');
-    this.radar.anchor.set(0.5);
+    this.radar.anchor.set(0.5,0.5);
     this.gun.anchor.set(0.5,0.5);
     this.bullets = bullets;
     this.bulletTime = 0;
@@ -40,7 +40,9 @@ Turret.prototype.update = function() {
 
     this.gun.rotation = game.physics.arcade.angleBetween(this.gun, this.target); 
 
-    this.fire();
+    if (game.physics.arcade.distanceBetween(this.base, this.target) < 48) {
+        this.fire();
+    }
 };
 
 Turret.prototype.track = function(target) {
@@ -49,7 +51,7 @@ Turret.prototype.track = function(target) {
 
 Turret.prototype.fire = function() {
 
-    if (game.time.now > this.bulletTime) { 
+    if (game.time.now > this.bulletTime && this.target.alive) { 
         //  Grab the first bullet we can from the pool
         var bullet = this.bullets.getFirstExists(false); 
         if (bullet) {
@@ -64,6 +66,8 @@ Turret.prototype.fire = function() {
 
     console.log(this.target.alive);
 };
+
+ 
 module.exports = Turret;
 },{}],3:[function(require,module,exports){
 module.exports = {
@@ -215,10 +219,8 @@ var releaseTheHounds = function () {
 var preparePath = function () {
     pathfinder.setCallbackFunction(function(fpath) {
         path = fpath || []; 
-        releaseTheHounds();
-        setTimeout(releaseTheHounds, 1000*2);
-        setTimeout(releaseTheHounds,2000*2);
-        setTimeout(releaseTheHounds, 3000*2);
+        //releaseTheHounds();
+        game.time.events.repeat(Phaser.Timer.SECOND * 7, 4, releaseTheHounds, this);
  
     });
     //console.log([startx, starty], [tilex, tiley])
@@ -269,21 +271,30 @@ module.exports = {
         console.log('end');
 
         t1 = new Turret(4,4, bullets);
-        t2 = new Turret(1,5, bullets);
-        t1.track(enemy);
-        t2.track(enemy);
+        t2 = new Turret(1,5, bullets); 
     },
     update: function(){
     //Game logic goes here
 
-            t1.update();
-            t2.update();
+
 
             game.physics.arcade.overlap(bullets, enemies, function (b,e) {
                 b.kill();
                 e.hp = e.hp-1;
                 if (e.hp<=0) {e.kill();}
             }, null, this);
+            enemies.forEach(function (enemy) {
+                //console.log(game.physics.arcade.distanceBetween(t1.base, enemy));
+                if (game.physics.arcade.distanceBetween(t1.base, enemy) < 48) {
+                    t1.track(enemy)
+                }
+                if (game.physics.arcade.distanceBetween(t2.base, enemy) < 48) {
+                    t2.track(enemy)
+                }
+            });
+            t1.update();
+            t2.update();
+ 
     },
 };
 
