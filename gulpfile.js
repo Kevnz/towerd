@@ -4,7 +4,27 @@ var deploy = require('gulp-gh-pages');
 
 var browserify = require('browserify');
 var source = require('vinyl-source-stream');
+var tape = require('tape');
+var spec = require('tap-spec');
 
+//var source = require('vinyl-source-stream');
+
+
+
+gulp.task('test', function() {
+
+    var test = require('tape');
+    var path = require('path');
+ 
+    test.createStream().pipe(process.stdout);
+ 
+    ['./test/extend_spec.js', './test/mixin_spec.js'].forEach(function (file) {
+        require(path.resolve(file));
+    });
+
+
+ 
+});
 gulp.task('build', function () {
 var result = browserify({
 				entries:['./src/game.js']
