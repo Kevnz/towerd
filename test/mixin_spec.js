@@ -46,7 +46,6 @@ test('mixin test', function (t) {
         }
     };
     firstObj.first();
-    console.log(firstObj);
     mixin(firstObj, [extendObj,extendOtherObj]);
 
     t.equal(typeof firstObj.second, 'function');

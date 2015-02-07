@@ -1,15 +1,5 @@
 
 module.exports = function (target, sources) {
-    console.log(target);
-    console.log(target.prototype);
-    var targPrototype = target.prototype;
-
-
-
-
-
-
-
 
     if (Array.isArray(sources)) {
         sources.forEach(function (source) {
