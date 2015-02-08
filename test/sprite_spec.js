@@ -23,13 +23,12 @@ module.exports = {
     },
     'Sprite Mixins Test': function (t) {
         var mixin = require('../src/utils/mixin');
-        var tape = require('tape');
-       
-        var cheerio = require('cheerio');
-        console.log(cheerio);
-        document = cheerio.load('<body></body>');
+
+        
+        
+        document = { };
+        var Phaser = require('phaser');
         var Sprite = Phaser.Srite;
- var Phaser = require('phaser');
         console.log(Sprite);
         t.equal(true,false);
         t.done();
