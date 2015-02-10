@@ -4,7 +4,9 @@
   "description": "A tower defense game!",
   "scripts": {
     "start": "beefy src/game.js:bundle.js --live --open",
-    "test": "tape test/*.js | faucet"
+    "test-node": "tape test/*.js | faucet",
+    "test": "gulp test-build"
+
   },
   "dependencies": {
     "beefy": "~2.1.1",
