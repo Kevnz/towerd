@@ -23,6 +23,31 @@ gulp.task('test', function() {
 
  
 });
+gulp.task('test-build', function () {
+    var result = browserify({
+                entries:['./test/index.js']
+            }).on('error', function () {
+                console.log('There was an error');
+                console.log(arguments);
+                this.emit('end');
+            })
+
+    return result
+            .bundle(function (err,buf){
+                if (err){
+                    console.log('Bundle failure');
+                    console.log(err);
+                }
+            }) 
+            .on('error', function () {
+                console.log('There was an error');
+                console.log(arguments);
+                this.emit('end');
+            })
+            .pipe(source('test-bundle.js'))
+            .pipe(gulp.dest('./'));
+});
+
 
 gulp.task('build', function () {
 var result = browserify({
