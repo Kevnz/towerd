@@ -15,11 +15,19 @@ First.prototype.prop = 'Property On Base';
 module.exports = {
     setUp: function (callback) {
         this.foo = 'bar';
-        callback();
+        console.log(callback);
+        if (typeof callback.done === 'function'){
+          callback.done();  
+        } else {
+            callback();
+        }
     },
     tearDown: function (callback) {
-        // clean up
-        callback();
+        if (typeof callback.done === 'function'){
+          callback.done();  
+        } else {
+            callback();
+        }
     },
     'Mixin Test': function (t) {
         var mixin = require('../src/utils/mixin');
