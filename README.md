@@ -9,7 +9,8 @@ Installation is dead easy and assumes you have already installed node.js and npm
 
 Download and extract the template and cd into it from the command line.
 
-    npm install    
+    npm install   
+    npm install -g beefy
 
 Done? Awesome.
 
